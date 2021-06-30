@@ -1,6 +1,6 @@
 {
   "name": "jogo-da-velha-core",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Core do jogo da velha",
   "main": "jogo-da-velha-core.js",
   "scripts": {
