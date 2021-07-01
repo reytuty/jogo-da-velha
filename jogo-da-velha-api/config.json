@@ -1,0 +1,9 @@
+{
+    "port": 3000,
+    "database":{
+        "active":true,
+        "user":"",
+        "pass":"",
+        "ip":"localhost:27017"
+    }
+}

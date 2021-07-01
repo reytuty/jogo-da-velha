@@ -1,0 +1,133 @@
+<html>
+    <head>
+        <title>Jogo da velha de Renato Miawaki</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <style>
+            th, td {
+                text-align: center;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <h1>Jogo da Velha</h1>
+            </div>
+            <div class="row">
+                <div class="col">
+                  <h2>Nível de dificuldade</h2>
+                  <div class="conteiner">
+                      <div class="row">
+                        <button id="button-level-0" onclick="sendLevel(0);" class="btn  btn-outline-secondary level-choice">Muito Fácil</button>
+                      </div>
+                      <div class="row">
+                        <button id="button-level-1" onclick="sendLevel(1);" class="btn  btn-outline-secondary level-choice">Fácil</button>
+                      </div>
+                      <div class="row">
+                        <button  id="button-level-2"  onclick="sendLevel(2);" class="btn btn-outline-secondary level-choice">Médio</button>
+                      </div>
+                      <div class="row">
+                        <button  id="button-level-3"  onclick="sendLevel(3);" class="btn  btn-outline-secondary level-choice">Difícil</button>
+                      </div>
+                  </div>
+                </div>
+                <div class="col">
+                    <h2>Tabuleiro</h2>
+                    <table class="table" style="min-height: 300px;">
+                        <tr style="height: 100px;">
+                            <td id="table-0" class="border" style="width: 33%;" onclick="sendPlay(0);"></td>
+                            <td id="table-1" class="border" style="width: 33%;" onclick="sendPlay(1);"></td>
+                            <td id="table-2" class="border" style="width: 33%;" onclick="sendPlay(2);"></td>
+                        </tr>
+                        <tr style="height: 100px;">
+                            <td id="table-3" class="border" onclick="sendPlay(3);"></td>
+                            <td id="table-4" class="border" onclick="sendPlay(4);"></td>
+                            <td id="table-5" class="border" onclick="sendPlay(5);"></td>
+                        </tr>
+                        <tr style="height: 100px;">
+                            <td id="table-6" class="border" onclick="sendPlay(6);"></td>
+                            <td id="table-7" class="border" onclick="sendPlay(7);"></td>
+                            <td id="table-8" class="border" onclick="sendPlay(8);"></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col">
+                    <div class="container">
+                        <div class="row">
+                            <h2>Status</h2>
+                            <h3 id="game-status">JOGANDO</h3>
+                        </div>
+                        <div class="row">
+                            <h2>Placar</h2>
+                            <table class="table">
+                                <thead>
+                                    <tr style="table-dark">
+                                        <td>X</td>
+                                        <td>O</td>
+                                        <td>V</td>
+                                    </tr>
+                                </thead>
+                                <tr>
+                                    <td id="placar-x">0</td>
+                                    <td id="placar-o">0</td>
+                                    <td id="placar-v">0</td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <button id="btn-jogar" class="btn btn-outline-secondary" onclick="jogarNovamente();">JOGAR NOVAMENTE</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div id="messages" class="alert alert-secondary"></div>
+            </div>
+        </div>
+    </body>
+</html>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script>
+let gameEnd = false;
+const socket = io();
+  function jogarNovamente(){
+      if(gameEnd){
+        socket.emit("start") ;
+      }
+  }
+    function sendLevel(l){
+        console.log("sendlevel", l)
+        socket.emit("selectLevel", l) ;
+    }
+    function sendPlay(play){
+        console.log("sendplay", play);
+        socket.emit("play", play) ;
+    }
+    socket.on("message", (m)=>{
+        $("#messages").html(m);
+    })
+    
+socket.on('game-info', function(info) {
+    $(".level-choice").removeClass("btn-outline-primary") ;
+    $(".level-choice").addClass("btn-outline-secondary") ;
+    $("#button-level-"+info.level).removeClass("btn-outline-secondary") ;
+    $("#button-level-"+info.level).addClass("btn-outline-primary") ;
+    for( var i in info.plays){
+        var val = info.plays[i] == null ? "": info.plays[i] == 1 ? "X" : "O" ;
+        $("#table-"+i).html(val) ;
+    }
+    for( var i in info.placar ){
+        $("#placar-"+i).html(info.placar[i]) ;
+    }
+    gameEnd = info.end ;
+    if( info.end ){
+        $("#btn-jogar").removeClass("btn-outline-secondary") ;
+        $("#btn-jogar").addClass("btn-outline-success") ;
+    } else {
+        $("#btn-jogar").removeClass("btn-outline-success") ;
+        $("#btn-jogar").addClass("btn-outline-secondary") ;
+    }
+});
+</script>
