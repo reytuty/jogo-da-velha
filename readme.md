@@ -39,8 +39,22 @@ user (keep empty to do not use user and pass), ip (with port), pass
 
 Go to terminal
 
-Enter in jogo-da-velha-api folder
+Enter in jogo-da-velha-api folder and install dependences
+
+```
+cd jogo-da-velha-api/
+npm i
+```
 
 ```
 node index
+```
+
+
+## Play 
+
+Open browser and acess:
+
+```
+http://localhost:3000/
 ```
