@@ -1,9 +1,14 @@
-# Dependences
+## tic-tac-toe 
+
+Game tic-tac-toe created just to teach basics about javascript development.
+This project is part of the online (live) course to beginners learn how to develop in js and node.
+
+## Dependences
 
 mongodb
 node.js v14.17
 
-## intall mongodb
+## install mongodb
 
 brew install mongodb-community@4.4
 
